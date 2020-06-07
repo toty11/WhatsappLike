@@ -1,4 +1,11 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -10,9 +17,41 @@ import org.json.*;
 
 public class fonction {		
 	private String id = "5e7554d14ac800a91d7f18caf541a43bd8d5a01eac61f157fc0ca60ef1c0ac0c";
+	private String pseudo;
 	
-	public fonction(String id) {
+	public fonction(String id, String pseudo) {
 		this.setId(id);
+		this.setPseudo(pseudo);
+	}
+	
+	public boolean inscription(String pseudo, String email) {
+		URL url;
+		Boolean resultat = false;
+		try {
+			url = new URL("https://trankillprojets.fr/wal/wal.php?inscription&identite="+pseudo+"&mail="+email);
+			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			con.setRequestProperty("Content-Type", "application/json");
+			
+			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+			String inputLine;
+			StringBuffer content = new StringBuffer();
+			while ((inputLine = in.readLine()) != null) {
+			    content.append(inputLine);
+			}
+			in.close();
+			
+			JSONObject json = new JSONObject(content.toString());
+			JSONObject etat = json.getJSONObject("etat");
+			
+			if(etat.getString("message").compareTo("Un mail de validation vous a été envoyé") != -1) {
+				resultat = true;
+			}
+		}catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return resultat;
 	}
 	
 	public HashMap<String, Integer> afficherContacts() {
@@ -24,8 +63,7 @@ public class fonction {
 			con.setRequestProperty("Content-Type", "application/json");
 			String contentType = con.getHeaderField("Content-Type");
 
-			BufferedReader in = new BufferedReader(
-			  new InputStreamReader(con.getInputStream()));
+			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 			String inputLine;
 			StringBuffer content = new StringBuffer();
 			while ((inputLine = in.readLine()) != null) {
@@ -142,7 +180,7 @@ public class fonction {
 			JSONObject json = new JSONObject(content.toString());
 			JSONObject etat = json.getJSONObject("etat");
 			
-			if(etat.getString("message") == "association OK") {
+			if(etat.getString("message").compareTo("association OK") != -1) {
 				return true;
 			}
 		} catch (Exception e) {
@@ -159,5 +197,29 @@ public class fonction {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+	
+	public Boolean ecrireUser(String id, String pseudo) {
+		File file;
+		try {
+			file = new File("identifiant.txt");
+			FileOutputStream input =new FileOutputStream(file,true);
+			input.write("\n".getBytes());
+			input.write((id+" "+pseudo).getBytes());
+			input.close();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	public String getPseudo() {
+		return pseudo;
+	}
+
+	public void setPseudo(String pseudo) {
+		this.pseudo = pseudo;
 	}
 }
