@@ -47,10 +47,13 @@ public class Fenetre extends JFrame {
 	private HashMap<String,Integer> contactList;
 	private HashMap<String,String> accountList = new HashMap<String,String>();
 	private ArrayList contactLabel = new ArrayList<>();
-	Color vert = new Color(18, 234, 166);
+	Color vert = new Color(72, 117, 73);//18, 234, 166
+	Color vert_welcome = new Color(107, 196, 166);
 	Color noir = new Color(96, 100, 110);
 	Color gris = new Color(222, 220, 213); 
 	Color bleu = new Color(152, 188, 245);
+	Color dark = new Color(52, 58, 64);
+	Color btn = new Color(235, 139, 53);
 	JDialog ajouter_contact = new JDialog(this,"Ajouter un contact",true);
 	JDialog ajouter_compte = new JDialog(this,"Ajouter un compte",true);
 	String dernierMessageReçu = "";
@@ -72,6 +75,8 @@ public class Fenetre extends JFrame {
 	public void drawR(Graphics g) {
 		g.setColor(Color.white);
 		g.fillRect(90, 140, 460, 440);
+		g.setColor(dark);
+		g.fillRect(90, 140, 460, 440);
 		g.setColor(noir);
 		g.drawRect(90, 140, 460, 440);
 	}
@@ -88,7 +93,7 @@ public class Fenetre extends JFrame {
 		f = new fonction(idUserConnecter,pseudo);
 		contactList =  f.afficherContacts();
 		this.setContentPane(pan);
-		pan.setBackground(Color.white);
+		pan.setBackground(dark);
 		
 		JButton btnRetour = new JButton("Accueil");
 		btnRetour.setBounds(30, 15, 80, 30);
@@ -108,12 +113,12 @@ public class Fenetre extends JFrame {
 		logo_plus.setBorder(null);
 		logo_plus.setSize(24,24);
 		logo_plus.setLocation(760,100);
-		logo_plus.setBackground(Color.WHITE);
+		logo_plus.setBackground(null);
 		logo_plus.addMouseListener(new ajouterContactListener());
 		pan.add(logo_plus);
 		
 		JLabel wal = new JLabel("WhatsAppLike");
-		wal.setForeground(noir);
+		wal.setForeground(vert);
 		wal.setFont(new Font("TimesRoman", Font.BOLD, 30));
 		wal.setSize(300,30);
 		wal.setLocation(300,50);//225,50
@@ -128,7 +133,7 @@ public class Fenetre extends JFrame {
 	    while (it.hasNext()) {
 	        HashMap.Entry pair = (HashMap.Entry)it.next();
 	        JLabel contactLabel = new JLabel(pair.getKey().toString(),JLabel.RIGHT);
-			contactLabel.setForeground(noir);
+			contactLabel.setForeground(Color.white);
 			contactLabel.setFont(new Font("TimesRoman", Font.PLAIN, 15));
 			contactLabel.setBounds(650, horizontal, 80, 30);
 			contactLabel.addMouseListener(new contactListener());
@@ -147,7 +152,7 @@ public class Fenetre extends JFrame {
 			pan_user.setVisible(true);
 		}
 		
-		pan_user.setBackground(Color.white);
+		pan_user.setBackground(dark);
 		try {
 			FileReader input = new FileReader("identifiant.txt");
 			BufferedReader bufRead = new BufferedReader(input);
@@ -161,7 +166,7 @@ public class Fenetre extends JFrame {
 			    String[] array1 = myLine.split(" ");
 			    accountList.put(array1[1], array1[0]);
 			    JButton user = new JButton(array1[1]);
-			    user.setBackground(gris);
+			    user.setBackground(btn);
 			    user.setFont(new Font("TimesRoman", Font.BOLD, 25));
 			    user.setSize(180,180);
 			    user.setLocation(position_user,horizontal_user);
@@ -188,12 +193,12 @@ public class Fenetre extends JFrame {
 				pan.add(label_ajout_user);*/
 			}
 			plus_user.setLocation(position_user,horizontal_user+60);
-			plus_user.setBackground(Color.WHITE);
+			plus_user.setBackground(null);
 			plus_user.addMouseListener(new addUser());
 			pan_user.add(plus_user);
 			
 			JLabel wal = new JLabel("Bienvenu sur WhatsAppLike");
-			wal.setForeground(vert);
+			wal.setForeground(vert_welcome);
 			wal.setFont(new Font("TimesRoman", Font.BOLD, 30));
 			wal.setSize(500,30);
 			wal.setLocation(250,50);
@@ -217,8 +222,14 @@ public class Fenetre extends JFrame {
 			horizontal_user = 200;
 			dernierMessageReçu = "";
 			dernierMessageEnvoye = "";
+			
 			if(executor != null) {
 				executor.shutdown();
+				if(executor.isShutdown()) {
+					System.out.println("SHUTDOWN");
+				}else {
+					executor.shutdown();
+				}
 			}
 			pos_horizontal_message = 200;
 			init_accueil(true);
@@ -245,14 +256,16 @@ public class Fenetre extends JFrame {
 			JPanel pan_dialog = new JPanel(null);
 			pan_dialog.setBackground(Color.white);
 			pan_dialog.setLayout(null);
-			pan_dialog.setBackground(Color.WHITE);
+			pan_dialog.setBackground(dark);
 			
 			JLabel label_Instruction = new JLabel("Veuillez saisir un email pour recevoir un lien de vérification et votre ID.");
+			label_Instruction.setForeground(Color.white);
 			label_Instruction.setLocation(40,15);
 			label_Instruction.setSize(420,15);
 			pan_dialog.add(label_Instruction);
 			
 			JLabel label_Email = new JLabel("Email");
+			label_Email.setForeground(Color.white);
 			label_Email.setLocation(75,50);
 			label_Email.setSize(100,15);
 			pan_dialog.add(label_Email);
@@ -263,6 +276,7 @@ public class Fenetre extends JFrame {
 			pan_dialog.add(email);
 			
 			JLabel label_Pseudo = new JLabel("Pseudo");
+			label_Pseudo.setForeground(Color.white);
 			label_Pseudo.setLocation(75,110);
 			label_Pseudo.setSize(100,15);
 			pan_dialog.add(label_Pseudo);
@@ -273,6 +287,7 @@ public class Fenetre extends JFrame {
 			pan_dialog.add(pseudo);
 			
 			JLabel label_Id = new JLabel("Identifiant");
+			label_Id.setForeground(Color.white);
 			label_Id.setLocation(75,50);
 			label_Id.setSize(100,15);
 			label_Id.setVisible(false);
@@ -318,7 +333,7 @@ public class Fenetre extends JFrame {
 						    	position_user = 120;
 						    }
 							JButton user = new JButton(pseudo_user);
-						    user.setBackground(gris);
+						    user.setBackground(btn);
 						    user.setFont(new Font("TimesRoman", Font.BOLD, 25));
 						    user.setSize(180,180);
 						    user.setLocation(position_user,horizontal_user);
@@ -379,12 +394,13 @@ public class Fenetre extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				pan.remove(logo_chat);
+				//pan.repaint();
 				JLabel contact = (JLabel) e.getSource();	
 				id_relation_discussion = contactList.get(contact.getText());
 				contact_chat.setText(contact.getText());
-				contact_chat.setForeground(noir);
+				contact_chat.setForeground(Color.white);
 				contact_chat.setFont(new Font("TimesRoman", Font.PLAIN, 14));
-				contact_chat.setBounds(150, 120,80,30);
+				contact_chat.setBounds(150, 120,100,30);
 				pan.add(contact_chat);
 				contact_chat.repaint();
 			
@@ -439,7 +455,7 @@ public class Fenetre extends JFrame {
 			message = parseTemps(message)+" "+parseMessage(message);
 			System.out.println(parseCharactereMessage(message));
 			JLabel msg = new JLabel("<html>"+parseCharactereMessage(message)+"</html>");
-	    	msg.setForeground(noir);
+	    	msg.setForeground(Color.white);
 	    	msg.setBounds(100,pos_horizontal_message,420,30);
 	    	msg.setFont(new Font("TimesRoman", Font.PLAIN, 14));
 	    	pos_horizontal_message += 20;
@@ -495,11 +511,11 @@ public class Fenetre extends JFrame {
 				JPanel pan_dialog = new JPanel(null);
 				pan_dialog.setBackground(Color.white);
 				pan_dialog.setLayout(null);
-				pan_dialog.setBackground(Color.WHITE);
+				pan_dialog.setBackground(dark);
 				
 				JLabel titre = new JLabel("Ajouter un contact");
 				titre.setBounds(90,15,150,15);
-				titre.setForeground(noir);
+				titre.setForeground(Color.white);
 				titre.setFont(new Font("TimesRoman", Font.PLAIN, 14));
 				pan_dialog.add(titre);
 				
