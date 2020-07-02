@@ -190,6 +190,37 @@ public class fonction {
 		
 		return false;
 	}
+	
+	public Boolean supprimerContact(int id_relation_discussion) {
+		URL url;
+		try {
+			url = new URL("https://trankillprojets.fr/wal/wal.php?delier&identifiant="+getId()+"&relation="+id_relation_discussion);
+			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			con.setRequestProperty("Content-Type", "application/json");
+			String contentType = con.getHeaderField("Content-Type");
+
+			BufferedReader in = new BufferedReader(
+			  new InputStreamReader(con.getInputStream()));
+			String inputLine;
+			StringBuffer content = new StringBuffer();
+			while ((inputLine = in.readLine()) != null) {
+			    content.append(inputLine);
+			}
+			in.close();
+			
+			JSONObject json = new JSONObject(content.toString());
+			JSONObject etat = json.getJSONObject("etat");
+			
+			if(etat.getString("message").equals("suppression association OK")) {
+				return true;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
 
 	public String getId() {
 		return id;
